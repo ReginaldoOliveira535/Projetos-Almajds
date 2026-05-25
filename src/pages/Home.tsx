@@ -136,13 +136,15 @@ export default function Home() {
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    // Validação de segurança e integridade em produção
+    // Validação suave da API URL
     if (import.meta.env.PROD) {
-      if (!import.meta.env.VITE_API_URL) {
-        console.error("Configuração Crítica: VITE_API_URL ausente no painel da Vercel.");
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (!apiUrl) {
+        console.warn("⚠️ VITE_API_URL não configurada. Algumas funcionalidades podem estar limitadas.");
+      } else {
+        console.log("✅ VITE_API_URL configurada:", apiUrl);
       }
     } else if (import.meta.env.DEV) {
-      // Log detalhado apenas para desenvolvimento local
       console.log(`[AL MAJD DEBUG] Modo: ${import.meta.env.MODE} | API: ${import.meta.env.VITE_API_URL || "Localhost"}`);
     }
   }, []);
