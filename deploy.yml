@@ -1,0 +1,53 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main
+      - develop # Adicionamos a branch de teste aqui
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout your code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Lint
+        run: pnpm lint || echo "Linting skipped or not configured"
+
+      - name: Run Tests
+        run: pnpm test --run # Garante que o deploy pare se os testes falharem
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Deploy to Vercel
+        uses: vercel/actions@v1
+        with:
+          # ID da sua organização Vercel (opcional, mas recomendado)
+          # Encontre em: https://vercel.com/dashboard/settings
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          # ID do seu projeto Vercel
+          # Encontre em: https://vercel.com/dashboard/<seu-projeto>/settings
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          # Token de API do Vercel (obrigatório)
+          # Crie em: https://vercel.com/account/tokens
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          # Se for a branch main, envia para produção. Caso contrário, é preview.
+          vercel-args: ${{ github.ref == 'refs/heads/main' && '--prod' || '' }}

@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+dist/
+dist-ssr/
+.vercel/
+*.local
+
+# Environment Variables
+.env*
+!.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDEs
+.vscode/
+.idea/
+
+node_modules/
+dist/
+.env
+*.local
